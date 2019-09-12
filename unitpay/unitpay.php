@@ -30,14 +30,22 @@ class plgVmPaymentUnitpay extends vmPSPlugin
             return null; // Another method was selected, do nothing
         }
         $public_key = $method->public_key;
+        $secret_key = $method->secret_key;
         $sum = $order['details']['BT']->order_total;
         $account = $order['details']['BT']->virtuemart_order_id;
         $desc = 'Оплата по заказу №' . $order['details']['BT']->order_number;
+        $signature = hash('sha256', join('{up}', array(
+            $account,
+            $desc,
+            $sum,
+            $secret_key
+        )));
 
         $html = '<form name="unitpay" action="https://unitpay.ru/pay/' . $public_key . '" method="get">';
         $html .= '<input type="hidden" name="sum" value="' . $sum . '">';
         $html .= '<input type="hidden" name="account" value="' . $account . '">';
         $html .= '<input type="hidden" name="desc" value="' . $desc . '">';
+        $html .= '<input type="hidden" name="signature" value="' . $signature . '">';
         $html .= '</form>';
         $html .= '<script type="text/javascript">';
         $html .= 'document.forms.unitpay.submit();';
