@@ -17,6 +17,7 @@ class plgVmPaymentUnitpay extends vmPSPlugin
         $jlang->load('vmpayment_unitpay', JPATH_ADMINISTRATOR, NULL, TRUE);
 
         $varsToPush        = array(
+            'domain'     => array('','string'),
             'secret_key' => array('','string'),
             'public_key' => array('','string'),
         );
@@ -29,6 +30,7 @@ class plgVmPaymentUnitpay extends vmPSPlugin
         if (!($method = $this->getVmPluginMethod($order['details']['BT']->virtuemart_paymentmethod_id))) {  //настройки
             return null; // Another method was selected, do nothing
         }
+        $domain = $method->domain;
         $public_key = $method->public_key;
         $secret_key = $method->secret_key;
         $sum = $order['details']['BT']->order_total;
@@ -41,7 +43,7 @@ class plgVmPaymentUnitpay extends vmPSPlugin
             $secret_key
         )));
 
-        $html = '<form name="unitpay" action="https://unitpay.ru/pay/' . $public_key . '" method="get">';
+        $html = '<form name="unitpay" action="https://'.$domain.'/pay/' . $public_key . '" method="get">';
         $html .= '<input type="hidden" name="sum" value="' . $sum . '">';
         $html .= '<input type="hidden" name="account" value="' . $account . '">';
         $html .= '<input type="hidden" name="desc" value="' . $desc . '">';
