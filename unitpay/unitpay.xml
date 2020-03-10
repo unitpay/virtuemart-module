@@ -22,6 +22,7 @@
     <vmconfig>
         <fields name="params">
             <fieldset name="payment" addfieldpath="/administrator/components/com_virtuemart/fields">
+                <field type="text" name="domain" size="50" label="DOMAIN" default="" description="VMPAYMENT_UNITPAY_DOMAIN_DESC" />
                 <field type="text" name="public_key" size="50" label="PUBLIC KEY" default="" description="VMPAYMENT_UNITPAY_PUBLIC_KEY_DESC" />
                 <field type="text" name="secret_key" size="50" label="SECRET KEY" default="" description="VMPAYMENT_UNITPAY_SECRET_KEY_DESC" />
             </fieldset>
