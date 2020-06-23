@@ -112,28 +112,27 @@ class plgVmPaymentUnitpay extends vmPSPlugin
 
     public function plgVmOnPaymentNotification()
     {
+        if (empty($_GET['params']) || empty($_GET['method']) || !isset($_GET['params']['signature'])){
+            return null;
+        }
 
         header('Content-type:application/json;  charset=utf-8');
 
         $method = '';
         $params = [];
 
-        if ((isset($_GET['params'])) && (isset($_GET['method'])) && (isset($_GET['params']['signature']))){
-            $params = $_GET['params'];
-            $method = $_GET['method'];
-            $signature = $params['signature'];
+        $params = $_GET['params'];
+        $method = $_GET['method'];
+        $signature = $params['signature'];
 
-            $orderModel     = VmModel::getModel('orders');
-            $order          = $orderModel->getOrder($params['account']);
+        $orderModel     = VmModel::getModel('orders');
+        $order          = $orderModel->getOrder($params['account']);
 
-            if (empty($signature) || empty($order['details'] )){
-                $status_sign = false;
-            }else{
-                $plugin_method  = $this->getVmPluginMethod($order['details']['BT']->virtuemart_paymentmethod_id);
-                $status_sign = $this->verifySignature($params, $method, $plugin_method->secret_key);
-            }
-        }else{
+        if (empty($signature) || empty($order['details'] )){
             $status_sign = false;
+        }else{
+            $plugin_method  = $this->getVmPluginMethod($order['details']['BT']->virtuemart_paymentmethod_id);
+            $status_sign = $this->verifySignature($params, $method, $plugin_method->secret_key);
         }
 
         if ($status_sign){
